@@ -2,6 +2,7 @@ import random
 import subprocess
 import re
 from open_ai import OpenAI
+from typing import Optional
 
 
 QUESTION_INPUT_TEXT = "?"  # Used if you're unsure of prompt. Will repeat
@@ -32,8 +33,11 @@ def check_gibberish(input: str) -> bool:
     return False
 
 
-def get_attempt(name: str, word: str, sentence: str):
-    prompt = f"{name} your word is {word}. As in, {sentence}"
+def get_attempt(name: str, word: str, sentence: Optional[str]):
+    prompt = f"{name} your word is {word}."
+    if sentence:
+        prompt +=  f" As in, {sentence}"
+
     attempt = QUESTION_INPUT_TEXT
 
     while attempt == QUESTION_INPUT_TEXT:

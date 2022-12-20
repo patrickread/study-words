@@ -1,13 +1,17 @@
 import openai
 import os
+from typing import Optional
 
 
 class OpenAI:
     def __init__(self):
         super().__init__()
-        openai.api_key = os.environ["OPENAI_API_KEY"]
+        openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-    def generate_sentence(self, word: str) -> str:
+    def generate_sentence(self, word: str) -> Optional[str]:
+        if "OPENAI_API_KEY" not in os.environ:
+            return None
+
         completion_result = openai.Completion.create(
             model="text-davinci-003",
             prompt=f"Use the word \"{word}\" in a sentence.",
