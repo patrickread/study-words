@@ -4,6 +4,11 @@ import re
 from open_ai import OpenAI
 
 
+QUESTION_INPUT_TEXT = "?"  # Used if you're unsure of prompt. Will repeat
+GAME_LENGTH = 10  # Number of sight words to practice each round
+FAILURE_TOLERANCE = 2  # How many times to fail before switch words to prevent burnout
+
+
 with open("words.txt", "r") as text_file:
     text = text_file.read()
     words = [line for line in text.split("\n") if line]
@@ -29,9 +34,9 @@ def check_gibberish(input: str) -> bool:
 
 def get_attempt(name: str, word: str, sentence: str):
     prompt = f"{name} your word is {word}. As in, {sentence}"
-    attempt = "?"
+    attempt = QUESTION_INPUT_TEXT
 
-    while attempt == "?":
+    while attempt == QUESTION_INPUT_TEXT:
         speak(prompt)
         attempt = input("Write word > ")
         attempt = attempt.strip()
@@ -50,7 +55,7 @@ def practice_words(input_words: list[str]):
     name = input("What is your name? > ")
     speak(f"Hi, {name}! Let's play!")
 
-    while words_to_practice and len(correct_words) < 10:
+    while words_to_practice and len(correct_words) < GAME_LENGTH:
         word = words_to_practice[0]
         sentence = openai_generator.generate_sentence(word)
         attempt = get_attempt(name, word, sentence)
@@ -71,11 +76,11 @@ def practice_words(input_words: list[str]):
         else:
             failures += 1
 
-        if failures > 1 and len(words_to_practice) > 1:
+        if failures > FAILURE_TOLERANCE-1 and len(words_to_practice) > 1:
             speak("Let's try a different word")
             random.shuffle(words_to_practice)
             failures = 0
 
-    speak(f"{name} you did it! You finished all of your sight words. I'm so proud of you.")
+    speak(f"{name} you did it! You finished this round of sight words. I'm so proud of you.")
 
 practice_words(words)
