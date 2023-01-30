@@ -2,6 +2,7 @@ import random
 import subprocess
 import re
 from open_ai import OpenAI
+from pathlib import Path
 from typing import Optional
 
 
@@ -10,11 +11,14 @@ GAME_LENGTH = 10  # Number of sight words to practice each round
 FAILURE_TOLERANCE = 2  # How many times to fail before switch words to prevent burnout
 
 
-with open("words.txt", "r") as text_file:
+path = Path(__file__).parent
+
+
+with (path / "words.txt").open("r") as text_file:
     text = text_file.read()
     words = [line for line in text.split("\n") if line]
 
-with open("affirmations.txt", "r") as text_file:
+with (path / "affirmations.txt").open("r") as text_file:
     text = text_file.read()
     affirmations = [line for line in text.split("\n") if line]
 
