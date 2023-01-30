@@ -49,6 +49,9 @@ def get_attempt(name: str, word: str, sentence: Optional[str]):
         attempt = input("Write word > ")
         attempt = attempt.strip()
 
+    while attempt == "":
+        attempt = input().strip()
+
     return attempt
 
 
