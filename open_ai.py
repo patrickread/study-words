@@ -9,7 +9,7 @@ class OpenAI:
         openai.api_key = os.environ.get("OPENAI_API_KEY")
 
     def generate_sentence(self, word: str) -> Optional[str]:
-        if "OPENAI_API_KEY" not in os.environ:
+        if openai.api_key is None:
             return None
 
         completion_result = openai.Completion.create(
