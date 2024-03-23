@@ -13,7 +13,7 @@ class OpenAI:
             return None
 
         completion_result = openai.Completion.create(
-            model="text-davinci-003",
+            model="gpt-3.5-turbo-instruct",
             prompt=f"Use the word \"{word}\" in a sentence.",
             temperature=0.5,
             max_tokens=150,
