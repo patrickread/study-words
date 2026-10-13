@@ -14,9 +14,28 @@ FAILURE_TOLERANCE = 2  # How many times to fail before switch words to prevent b
 path = Path(__file__).parent
 
 
-with (path / "words.txt").open("r") as text_file:
-    text = text_file.read()
-    words = [line for line in text.split("\n") if line]
+WORD_LISTS = {
+    "1": ("Sight words", "words.txt"),
+    "2": ("Addie's spelling list D-1", "words-addie-d1.txt"),
+}
+
+
+def load_words(filename: str) -> list[str]:
+    with (path / filename).open("r") as text_file:
+        text = text_file.read()
+        return [line.strip() for line in text.split("\n") if line.strip()]
+
+
+def choose_word_list(name: str) -> list[str]:
+    print("Choose a word list:")
+    for key, (label, _) in WORD_LISTS.items():
+        print(f"  {key}) {label}")
+    speak(f"{name}, which list do you want to practice? Press 1 for sight words, or 2 for Addie's spelling list.")
+    choice = input("Choose a list > ").strip()
+    while choice not in WORD_LISTS:
+        speak("Hmm, I didn't catch that. Please press 1 or 2.")
+        choice = input("Choose a list > ").strip()
+    return load_words(WORD_LISTS[choice][1])
 
 with (path / "affirmations.txt").open("r") as text_file:
     text = text_file.read()
@@ -55,9 +74,7 @@ def get_attempt(name: str, word: str, sentence: Optional[str]):
     return attempt
 
 
-def practice_words(input_words: list[str]):
-    words_to_practice = input_words.copy()
-    random.shuffle(words_to_practice)
+def practice_words():
     correct_words = []
     failures = 0
     openai_generator = OpenAI()
@@ -65,6 +82,9 @@ def practice_words(input_words: list[str]):
     speak("Welcome to the sight word game! First, what is your name?")
     name = input("What is your name? > ")
     speak(f"Hi, {name}! Let's play!")
+
+    words_to_practice = choose_word_list(name)
+    random.shuffle(words_to_practice)
 
     while words_to_practice and len(correct_words) < GAME_LENGTH:
         word = words_to_practice[0]
@@ -94,4 +114,4 @@ def practice_words(input_words: list[str]):
 
     speak(f"{name} you did it! You finished this round of sight words. I'm so proud of you.")
 
-practice_words(words)
+practice_words()

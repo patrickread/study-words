@@ -12,7 +12,7 @@ A simple Python-based game for a young child to study "sight words".
 ### Startup
 
 1. `pip install -r requirements.txt`. Use virtualenv if that's your thing.
-2. (optional) Edit `words.txt` to add/delete sight words as appropriate
+2. (optional) Edit `words.txt` to add/delete sight words as appropriate, or add a new `words-<name>.txt` list and register it in `WORD_LISTS` in `main.py` (e.g. `words-addie-d1.txt` for Addie's spelling list)
 3. (optional) Edit `affirmations.txt` for fun
 4. (optional) set `OPENAI_API_KEY` to get sentence samples while studying words
 5. Run `python main.py`
