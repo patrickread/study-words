@@ -12,14 +12,16 @@ class OpenAI:
         if openai.api_key is None:
             return None
 
-        completion_result = openai.Completion.create(
-            model="gpt-3.5-turbo-instruct",
-            prompt=f"Use the word \"{word}\" in a sentence.",
+        completion_result = openai.ChatCompletion.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "user", "content": f"Use the word \"{word}\" in a sentence."}
+            ],
             temperature=0.5,
             max_tokens=150,
             top_p=1,
             frequency_penalty=1,
             presence_penalty=1,
         )
-        sentence = completion_result["choices"][0]["text"]
+        sentence = completion_result["choices"][0]["message"]["content"]
         return sentence.replace("\n", "")
